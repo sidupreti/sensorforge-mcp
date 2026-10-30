@@ -1,0 +1,40 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.sidupreti/sensorforge-mcp",
+  "title": "SensorForge Optimizer",
+  "description": "Shrink trained models to fit edge devices with the hosted SensorForge Optimizer.",
+  "version": "0.1.0",
+  "websiteUrl": "https://sensorforge.dev/optimize",
+  "repository": {
+    "url": "https://github.com/sidupreti/sensorforge-mcp",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "sensorforge-mcp",
+      "version": "0.1.0",
+      "runtimeHint": "uvx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SENSORFORGE_API_KEY",
+          "description": "Your SensorForge API key (sfk_...), from https://sensorforge.dev/optimize/app (API keys).",
+          "format": "string",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "SENSORFORGE_URL",
+          "description": "The service's address.",
+          "format": "string",
+          "isRequired": false,
+          "default": "https://sensorforge.dev/optimize"
+        }
+      ]
+    }
+  ]
+}
