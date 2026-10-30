@@ -170,8 +170,11 @@ def _labels(y, name, n_classes, n_rows, rep: DataReport, output):
         rep.problems.append(f"{name} has {len(y)} labels but its X has {n_rows} samples: one label per sample.")
         return None
     if y.ndim == 2 and y.shape[1] >= 2 and np.isin(y, (0, 1)).all():
+        if y.size and (y.sum(axis=1) == 1).all():
+            rep.warnings.append(f"{name} is one-hot (a single 1 per row). Rows of 0 / 1 are read as multi-label (any number "
+                                f"of classes per sample); for one class per sample save the indices, {name}.argmax(axis=1).")
         if n_classes and y.shape[1] != n_classes:
-            rep.problems.append(f"{name} is multi-label with {y.shape[1]} columns, but the model outputs {n_classes} scores.")
+            rep.problems.append(f"{name} has {y.shape[1]} columns, but the model outputs {n_classes} scores.")
         rep.facts.append(f"{name}: multi-label, {y.shape[1]} classes, {int(y.sum())} labels set")
         return None
     if y.ndim == 2 and y.shape[1] == 1:

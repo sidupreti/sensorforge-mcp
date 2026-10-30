@@ -249,6 +249,8 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
         else:
             m = book.model_of(rid)
             base = os.path.dirname(m) if m and os.path.isdir(os.path.dirname(m)) else os.getcwd()
+            if base == os.path.abspath(os.sep) or not os.access(base, os.W_OK):
+                base = os.path.expanduser("~")      # a client started from / (some desktop apps): the home folder
             dest = os.path.join(base, "sensorforge", rid)
         if os.path.isfile(dest):
             raise ServiceError(f"{dest} is a file; pass a folder.")
@@ -437,7 +439,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
         accuracy_limit: Annotated[float, Field(ge=0.1, le=20, description="How many points of accuracy the result may lose "
                                                "against your model, on the test part of the data.")] = 1.0,
         effort: Annotated[Literal["quick", "thorough"], Field(description="'quick' (about 15 minutes) or 'thorough' (up "
-                                                              "to an hour, smaller results; paid plans).")] = "quick",
+                                                              "to an hour; not on the trial).")] = "quick",
         ram_kb: Annotated[float | None, Field(gt=0, le=100000, description="SRAM budget in KB (default: the chip's).")] = None,
         flash_kb: Annotated[float | None, Field(gt=0, le=100000, description="Flash budget in KB (default: the chip's).")] = None,
         output: Annotated[Literal["classes", "values"], Field(description="'classes' for class scores; 'values' for "

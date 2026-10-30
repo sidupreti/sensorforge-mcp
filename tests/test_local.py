@@ -138,6 +138,13 @@ def test_onnx_layout_hint(tmp_path):
     assert r.ok
 
 
+def test_one_hot_labels(tmp_path):
+    r = datacheck.check(INT8, npz(tmp_path, X=X(), y=np.eye(4)[y()]))
+    assert r.ok and any("one-hot" in w and "argmax" in w for w in r.warnings)
+    r = datacheck.check(INT8, npz(tmp_path, X=X(), y=np.eye(9)[y(k=9)]))
+    assert not r.ok and any("9 columns, but the model outputs 4" in p for p in r.problems)
+
+
 def test_multilabel_and_values(tmp_path):
     ml = (np.random.RandomState(1).rand(300, 4) > 0.5).astype("float32")
     assert datacheck.check(INT8, npz(tmp_path, X=X(), y=ml)).ok

@@ -483,3 +483,16 @@ async def test_optimize_image_zip_sends_scaling(service, project, tmp_path):
     assert not r.is_error, t
     assert service.fake.uploads[n]["fields"]["norm"] == "imagenet"
     assert service.fake.uploads[n]["names"]["data"] == "images.zip"
+
+
+async def test_download_of_an_unknown_model_goes_to_the_working_folder(service, project, tmp_path, monkeypatch):
+    async with client(service, tmp_path) as c:
+        r, t = await call(c, "lossless", {"model_path": str(project / "model.tflite"), "chip": "nrf54l15"})
+        rid = re.search(r"Run ([0-9a-f]{16})", t).group(1)
+    work = tmp_path / "work"
+    work.mkdir()
+    monkeypatch.chdir(work)
+    svc = Service(Config(url=service.url, key="sfk_team"))
+    async with Client(create_server(svc, RunBook(str(tmp_path / "other-home")), poll_s=0.05)) as c:
+        r, t = await call(c, "download", {"run_id": rid})
+    assert not r.is_error and (work / "sensorforge" / rid / "model_lossless.tflite").exists(), t
