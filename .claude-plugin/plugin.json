@@ -1,0 +1,23 @@
+{
+  "name": "sensorforge-optimizer",
+  "displayName": "SensorForge Optimizer",
+  "version": "0.1.0",
+  "description": "Shrink trained .tflite and ONNX models to fit edge devices: check the fit, cut SRAM and flash within your accuracy limit, and unpack the result into your project, with every figure measured by running the file.",
+  "author": { "name": "EdgeForge LLC", "url": "https://sensorforge.dev/optimize" },
+  "homepage": "https://github.com/sidupreti/sensorforge-mcp#readme",
+  "repository": "https://github.com/sidupreti/sensorforge-mcp",
+  "license": "Apache-2.0",
+  "keywords": ["edge-ai", "tinyml", "tflite", "tensorflow-lite-micro", "onnx", "embedded", "model-optimization"],
+  "documentationUrl": "https://github.com/sidupreti/sensorforge-mcp#readme",
+  "supportUrl": "https://github.com/sidupreti/sensorforge-mcp/issues",
+  "privacyPolicyUrl": "https://github.com/sidupreti/sensorforge-mcp#privacy-policy",
+  "userConfig": {
+    "api_key": {
+      "type": "string",
+      "title": "SensorForge API key",
+      "description": "Create one (it starts with sfk_) at https://sensorforge.dev/optimize/app, under API keys.",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}

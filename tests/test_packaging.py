@@ -50,3 +50,14 @@ def test_docs_name_no_competitors_or_prices():
         for t in (l.strip() for l in open(terms)):
             if t and not t.startswith("#"):
                 assert not re.search(t, text, re.I), t
+
+
+def test_plugin_files_pin_the_released_version():
+    """The directory holds a launcher that isn't pinned to an exact version, and the plugin's version is what people are kept on."""
+    import json
+    from sensorforge_mcp import __version__ as v
+    plugin = json.load(open(os.path.join(ROOT, ".claude-plugin", "plugin.json")))
+    mcp = json.load(open(os.path.join(ROOT, ".mcp.json")))["mcpServers"]["sensorforge"]
+    assert plugin["version"] == v and mcp["command"] == "uvx" and mcp["args"] == [f"sensorforge-mcp=={v}"]
+    assert mcp["env"]["SENSORFORGE_API_KEY"] == "${user_config.api_key}" and plugin["userConfig"]["api_key"]["sensitive"] is True
+

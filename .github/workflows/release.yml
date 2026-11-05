@@ -22,6 +22,8 @@ jobs:
         run: |
           v="${GITHUB_REF_NAME#v}"
           grep -q "__version__ = \"$v\"" src/sensorforge_mcp/__init__.py
+          grep -q "\"sensorforge-mcp==$v\"" .mcp.json
+          grep -q "\"version\": \"$v\"" .claude-plugin/plugin.json
           python -c "import json,sys; s=json.load(open('server.json')); assert s['version']=='$v' and all(p['version']=='$v' for p in s['packages'])"
       - run: python -m pip install -e ".[test]" build
       - run: python -m pytest -q

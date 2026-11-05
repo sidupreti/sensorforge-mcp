@@ -303,7 +303,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
 
     # ---------------------------------------------------------------- tools
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="List chips", annotations=READ_ONLY, structured_output=False)
     @_tool_errors
     async def list_chips() -> str:
         """List the chips (edge devices) the optimizer targets, with each one's SRAM and flash budget for the model.
@@ -320,7 +320,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
                      "generic one, and give ram_kb / flash_kb to optimize.")
         return "\n".join(lines)
 
-    @mcp.tool(annotations=SUBMITS, structured_output=False)
+    @mcp.tool(title="Check fit on a chip", annotations=SUBMITS, structured_output=False)
     @_tool_errors
     async def check_fit(
         model_path: Annotated[str, Field(description="The model: a .tflite or .onnx file, or a .zip of a firmware export. "
@@ -374,7 +374,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
                        "optimize(model, data, chip) goes further within an accuracy limit.")
         return "\n".join(out)
 
-    @mcp.tool(annotations=LOCAL_READ, structured_output=False)
+    @mcp.tool(title="Check data locally", annotations=LOCAL_READ, structured_output=False)
     @_tool_errors
     async def check_data(
         model_path: Annotated[str, Field(description="The model the data is for (.tflite, .onnx, or a firmware .zip).")],
@@ -394,7 +394,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
             text += "\nNext: optimize(model_path, data_path, chip)."
         return text
 
-    @mcp.tool(annotations=SUBMITS, structured_output=False)
+    @mcp.tool(title="Lossless shrink", annotations=SUBMITS, structured_output=False)
     @_tool_errors
     async def lossless(
         model_path: Annotated[str, Field(description="The model: .tflite or .onnx, or a .zip of a firmware export.")],
@@ -427,7 +427,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
         text = fmt.job_text(j, ts, downloaded)
         return text + ("\n" + extra if extra else "")
 
-    @mcp.tool(annotations=SUBMITS, structured_output=False)
+    @mcp.tool(title="Optimize within an accuracy limit", annotations=SUBMITS, structured_output=False)
     @_tool_errors
     async def optimize(
         model_path: Annotated[str, Field(description="The trained model: .tflite or .onnx, or a .zip of a firmware export.")],
@@ -478,7 +478,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
             f"{'Quick runs take about 15 minutes' if effort == 'quick' else 'Thorough runs take up to an hour'}.",
             f"Next: wait_for_run(\"{r['id']}\"); call it again while it says still running. Then download(\"{r['id']}\")."])
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="Run status", annotations=READ_ONLY, structured_output=False)
     @_tool_errors
     async def run_status(run_id: Annotated[str, Field(description="The run id from check_fit, lossless, optimize or "
                                                                   "list_runs.")]) -> str:
@@ -487,7 +487,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
         j = await svc.job(run_id)
         return fmt.job_text(j, await targets())
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="Wait for a run", annotations=READ_ONLY, structured_output=False)
     @_tool_errors
     async def wait_for_run(
         run_id: Annotated[str, Field(description="The run id.")],
@@ -505,7 +505,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
             text += f"\nStill running after this call's {max_wait_s} s: call wait_for_run(\"{run_id}\") again."
         return text
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="Get a run's report", annotations=READ_ONLY, structured_output=False)
     @_tool_errors
     async def get_report(run_id: Annotated[str, Field(description="The run id.")]) -> str:
         """The run's full report as markdown: the measured figures, what was changed and why, and what to do next.
@@ -515,7 +515,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
             text = text[:REPORT_MAX_CHARS] + "\n\n[... cut here; the whole report is in the download as report.md]"
         return text
 
-    @mcp.tool(annotations=WRITES, structured_output=False)
+    @mcp.tool(title="Download a run's result", annotations=WRITES, structured_output=False)
     @_tool_errors
     async def download(
         run_id: Annotated[str, Field(description="The run id of a lossless or optimize run that passed.")],
@@ -530,7 +530,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
         dest, written = await download_into(j, folder, overwrite)
         return listing(dest, written) + "\n" + fmt.next_step(j, downloaded=True)
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="List runs", annotations=READ_ONLY, structured_output=False)
     @_tool_errors
     async def list_runs(limit: Annotated[int, Field(ge=1, le=100, description="How many runs, newest first.")] = 20) -> str:
         """The account's recent runs, newest first: id, when, kind, model, status and verdict. Runs are kept 14 days."""
@@ -546,7 +546,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
         out.append(f"Times are local ({time.strftime('%Z')}). run_status(run_id) for one run's figures.")
         return "\n".join(out)
 
-    @mcp.tool(annotations=ToolAnnotations(read_only_hint=False, destructive_hint=True, idempotent_hint=True,
+    @mcp.tool(title="Stop a run", annotations=ToolAnnotations(read_only_hint=False, destructive_hint=True, idempotent_hint=True,
                                           open_world_hint=True), structured_output=False)
     @_tool_errors
     async def stop_run(run_id: Annotated[str, Field(description="The run id.")]) -> str:
@@ -558,7 +558,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
             return f"Stopped run {run_id}."
         return f"Run {run_id} was not stopped: it is {j.get('status')}" + (" (already finished)." if j.get("status") in fmt.FINAL else ".")
 
-    @mcp.tool(annotations=READ_ONLY, structured_output=False)
+    @mcp.tool(title="Account and usage", annotations=READ_ONLY, structured_output=False)
     @_tool_errors
     async def account() -> str:
         """The account's plan, this month's usage, and how many runs are left today (with when the next one is free

@@ -10,3 +10,4 @@ htmlcov/
 NOTES.dev.md
 .env
 tests/.private_terms.txt
+.DS_Store

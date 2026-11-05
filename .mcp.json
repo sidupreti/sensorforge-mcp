@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "sensorforge": {
+      "command": "uvx",
+      "args": ["sensorforge-mcp==0.1.0"],
+      "env": { "SENSORFORGE_API_KEY": "${user_config.api_key}" }
+    }
+  }
+}

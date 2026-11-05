@@ -42,6 +42,10 @@ project), **Windsurf** (`~/.codeium/windsurf/mcp_config.json`) and **Cline** (MC
 }
 ```
 
+**Claude plugin**: this repository is also a plugin, with the server above and a `fit-model-to-chip` skill. It asks for your
+key once and keeps it in your system's credential store. The plugin runs `uvx sensorforge-mcp` on your machine; it loads in
+Claude Code and in Cowork sessions on your computer, not in claude.ai chat.
+
 **VS Code** (`.vscode/mcp.json`; VS Code asks for the key once and stores it):
 
 ```json
@@ -126,14 +130,24 @@ class are enough to measure accuracy; more helps the retraining. `check_data` ch
 - Results (report and model) are kept 14 days.
 - Uploaded models and data are deleted when the run ends.
 
-## Privacy
+## Privacy Policy
 
-- The server reads only the files you name. `check_data` runs on your machine and uploads nothing.
-- Your API key is sent only to the SensorForge service, over HTTPS.
-- On the service, your uploads and everything made from them are deleted when the run ends; the report and the
-  optimized model stay 14 days for you to download, visible to your account only.
-- Locally the server keeps a short list of your run ids and model paths in `~/.sensorforge-mcp/runs.json`, so
-  downloads land next to the right model. Nothing it downloads is ever run.
+**What is collected.** The server reads only the files you name. `check_fit`, `lossless` and `optimize` upload the model, and
+`optimize` also uploads your data file, to the SensorForge service over HTTPS. `check_data` runs on your machine and uploads
+nothing. Your API key is sent only to the SensorForge service.
+
+**How it is used and stored.** The service uses your uploads to run the job you asked for, each in its own folder. Your runs,
+reports and optimized models are visible only to your account. Locally the server keeps a short list of your run ids and
+model paths in `~/.sensorforge-mcp/runs.json`, so downloads land next to the right model. Nothing it downloads is ever run.
+
+**Who else handles it.** The service and its storage run on Railway, Vercel routes traffic to it, and sign-in is by Clerk.
+Your models and data are not sold or shared with anyone else.
+
+**How long it is kept.** Uploads and everything made from them are deleted when the run ends. The report and the optimized
+model are kept for 14 days so you can download them, then deleted. A record of each run (file names, settings, results and
+compute time) stays for your run history and billing.
+
+**Contact.** sid@sensorforge.dev. EdgeForge LLC.
 
 ## Settings
 
