@@ -111,8 +111,8 @@ async def test_check_fit_relative_path_and_tilde(service, project, tmp_path, mon
     async with client(service, tmp_path) as c:
         r, t = await call(c, "check_fit", {"model_path": "model.tflite", "chips": ["nrf54l15"]})
         assert not r.is_error, t
-    monkeypatch.setenv("HOME", str(project)
-    monkeypatch.setenv("USERPROFILE", str(project)     # what expanduser reads on Windows)
+    monkeypatch.setenv("HOME", str(project))
+    monkeypatch.setenv("USERPROFILE", str(project))     # what expanduser reads on Windows
     async with client(service, tmp_path) as c:
         r, t = await call(c, "check_fit", {"model_path": "~/model.tflite", "chips": ["nrf54l15"]})
         assert not r.is_error, t
