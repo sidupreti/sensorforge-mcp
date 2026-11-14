@@ -127,8 +127,6 @@ class are enough to measure accuracy; more helps the retraining. `check_data` ch
   accepted: export to `.tflite` or `.onnx` first.
 - Data up to 500 MB (`.npz` or `.zip`; a zip may unpack to 2,000 MB).
 - Runs per day depend on your plan; `account` shows what is left and when the next run is free.
-- Results (report and model) are kept 14 days.
-- Uploaded models and data are deleted when the run ends.
 
 ## Privacy Policy
 
@@ -143,9 +141,8 @@ model paths in `~/.sensorforge-mcp/runs.json`, so downloads land next to the rig
 **Who else handles it.** The service and its storage run on Railway, Vercel routes traffic to it, and sign-in is by Clerk.
 Your models and data are not sold or shared with anyone else.
 
-**How long it is kept.** Uploads and everything made from them are deleted when the run ends. The report and the optimized
-model are kept for 14 days so you can download them, then deleted. A record of each run (file names, settings, results and
-compute time) stays for your run history and billing.
+**How long it is kept.** As set out in SensorForge's privacy policy, https://sensorforge.dev/privacy. You can ask for your
+files to be deleted at any time at sid@sensorforge.dev.
 
 **Contact.** sid@sensorforge.dev. EdgeForge LLC.
 

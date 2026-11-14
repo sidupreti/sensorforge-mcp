@@ -47,7 +47,7 @@ NORM = {"auto": None, "0..1": "zero_one", "-1..1": "minus_one_one", "imagenet": 
 
 class RunBook:
     """Which local model each run came from, so download() can unpack next to it. A small JSON file in
-    SENSORFORGE_MCP_HOME (default ~/.sensorforge-mcp); runs older than the service keeps them (14 days) drop out."""
+    SENSORFORGE_MCP_HOME (default ~/.sensorforge-mcp); runs older than 14 days drop out of this local list."""
 
     def __init__(self, home=None):
         self.home = home or os.environ.get("SENSORFORGE_MCP_HOME") or os.path.expanduser("~/.sensorforge-mcp")
@@ -452,8 +452,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
     ) -> str:
         """Find the smallest model for the chip within your accuracy limit, retrained on your data. Runs on the service
         for 5-60 minutes, so this returns right away with the run id and its place in the queue: then call
-        wait_for_run(run_id) (again while it says still running), and download(run_id) when it passes. The data is used
-        for this run only and deleted when it ends."""
+        wait_for_run(run_id) (again while it says still running), and download(run_id) when it passes."""
         model = files.check_model(model_path)
         data = files.check_data_file(data_path)
         chip = await check_chip(chip)
@@ -533,7 +532,7 @@ def create_server(service: Service | None = None, runbook: RunBook | None = None
     @mcp.tool(title="List runs", annotations=READ_ONLY, structured_output=False)
     @_tool_errors
     async def list_runs(limit: Annotated[int, Field(ge=1, le=100, description="How many runs, newest first.")] = 20) -> str:
-        """The account's recent runs, newest first: id, when, kind, model, status and verdict. Runs are kept 14 days."""
+        """The account's recent runs, newest first: id, when, kind, model, status and verdict."""
         rows = await svc.jobs(limit)
         if not rows:
             return "No runs yet on this account."

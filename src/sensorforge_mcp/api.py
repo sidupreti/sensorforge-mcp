@@ -149,7 +149,7 @@ class Service:
         elif status == 403:
             msg = f"Not allowed: {dd or 'this account may not do that.'}"
         elif status == 404:
-            msg = {"run": "No such run on this account (runs are kept 14 days); list_runs shows the account's runs.",
+            msg = {"run": "No such run on this account; list_runs shows the account's runs.",
                    "report": "This run has no report (it may still be running, or ended before writing one).",
                    "download": "This run produced no file to download (only a PASS gives a model; see run_status)."
                    }.get(what, f"Not found: {dd or 'no such item.'}")
